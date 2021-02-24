@@ -1,0 +1,119 @@
+<template>
+  <div class="HeadBar">
+    <div class="bar">
+      <div class="logo">
+        <img src="../assets/img/logo1.jpg" alt="">
+        <h2>icmusic</h2>
+      </div>
+      <div class="head">
+        <router-link to="/FindMusic" tag="div" class="findmusic"
+          ><h4>发现音乐</h4></router-link
+        >
+        <router-link to="/Top" tag="div" class="top"
+          ><h4>排行榜</h4></router-link
+        >
+        <router-link to="/SongList" tag="div" class="song-list"
+          ><h4>歌单</h4></router-link
+        >
+        <router-link to="/MyMusic" tag="div" class="my-music"
+          ><h4>我的音乐</h4></router-link
+        >
+      </div>
+      <div class="search">
+        <span @click="SearchSong"></span>
+        <input @keyup.enter="SearchSong" ref="search" type="text" />
+      </div>
+    </div>
+  </div>
+</template>
+
+<script>
+export default {
+  name: "HeadBar",
+  methods: {
+    SearchSong() {
+      this.$store.state.searchName = this.$refs.search.value;
+      this.$store.commit("SearchSong");
+      if (this.$route.path !== "/SearchSong/Song") {
+        this.$router.push({ path: "/SearchSong/Song" });
+      }
+    },
+  },
+};
+</script>
+
+<style scoped>
+@font-face {
+  font-family: "icomoon";
+  src: url("../fonts/icomoon.eot?evtv7");
+  src: url("../fonts/icomoon.eot?evtv7#iefix") format("embedded-opentype"),
+    url("../fonts/icomoon.ttf?evtv7") format("truetype"),
+    url("../fonts/icomoon.woff?evtv7") format("woff"),
+    url("../fonts/icomoon.svg?evtv7#icomoon") format("svg");
+  font-weight: normal;
+  font-style: normal;
+  font-display: block;
+}
+
+.HeadBar {
+  position: fixed;
+  width: 100%;
+  background-color: #fff;
+  z-index: 99;
+  box-shadow: 0 5px 40px -1px rgb(2 10 18 / 10%);
+}
+.bar {
+    display: flex;
+    width: 1200px;
+    margin: 0 auto;
+}
+.head div {
+  height: 70px;
+  line-height: 74px;
+  float: left;
+  padding: 0 19px;
+  font-size: 14px;
+  color: #161e27;
+}
+.head div:hover {
+  color: #fa2800;
+}
+.logo {
+  display: flex;
+}
+.logo img {
+  width: 50px;
+  height: 50px;
+  margin: auto 0;
+}
+.logo h2 {
+  line-height: 74px;
+  margin-right: 10px;
+}
+.search {
+  height: 70px;
+  position: relative;
+}
+.search span {
+  font-family: "icomoon";
+  position: absolute;
+  top: 25px;
+  left: 686px;
+  z-index: 99;
+}
+.search input {
+  height: 32px;
+  width: 300px;
+  border-radius: 32px;
+  padding-left: 14px;
+  padding-right: 32px;
+  outline: none;
+  border: none;
+  position: absolute;
+  top: 18px;
+  left: 415px;
+  font-size: 14px;
+  color: #333;
+  background-color: #fafafa;
+}
+</style>

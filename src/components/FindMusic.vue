@@ -1,90 +1,93 @@
 <template>
-  <div class="find-music">
-    <!-- 轮播图 -->
-    <div class="carousel">
-      <!-- 图片地址从后台拿时，要动态的初始化swiper，否则loop无效  在swiper上添加v-if="musicImgs.length" -->
-      <swiper
-        class="swiper"
-        :options="swiperOption"
-        v-if="swiperBanners.length"
-      >
-        <swiper-slide v-for="item in swiperBanners" :key="item.scm"
-          ><img :src="item.imageUrl" alt=""
-        /></swiper-slide>
-        <div class="swiper-pagination" slot="pagination"></div>
-        <div class="swiper-button-prev" slot="button-prev"></div>
-        <div class="swiper-button-next" slot="button-next"></div>
-      </swiper>
-    </div>
-    <div class="m">
-      <!-- 推荐歌单 -->
-      <div class="re-musiclist">
-        <h2 class="re-musiclist-h2">推荐歌单</h2>
-        <ul>
-          <li v-for="item in ReMusicLists" :key="item.id">
-            <div class="playlist">
-              <img :src="item.picUrl" alt="" />
-              <h2>{{ item.name }}</h2>
-            </div>
-          </li>
-        </ul>
+  <div class="bg">
+    <div class="find-music">
+      <!-- 轮播图 -->
+      <div class="carousel">
+        <!-- 图片地址从后台拿时，要动态的初始化swiper，否则loop无效  在swiper上添加v-if="musicImgs.length" -->
+        <swiper
+          class="swiper"
+          :options="swiperOption"
+          v-if="swiperBanners.length"
+        >
+          <swiper-slide
+            v-for="item in swiperBanners"
+            :key="item.scm"
+            class="swiper-slide"
+            ><img :src="item.imageUrl" alt=""
+          /></swiper-slide>
+          <div class="swiper-pagination" slot="pagination"></div>
+        </swiper>
       </div>
-      <!-- 推荐单曲 -->
-      <div class="re-music">
-        <h2 class="re-music-h2">推荐单曲</h2>
-        <ul>
-          <div class="musics" ref="musics">
-            <li
-              v-for="(item, index) in ReMusics"
-              :key="index"
-              :data-musicid="item.id"
-              :data-index="index"
-              ref="remusic"
-            >
-              <div class="re-music-once">
-                <div class="re-music-once-number">
-                  {{ index + 1 >= 10 ? index + 1 : "0" + (index + 1) }}
-                </div>
-                <div
-                  class="re-music-once-picurl"
-                  @click="getMusic(item.id, index)"
-                >
-                  <img :src="item.picUrl" alt="" />
-                </div>
-                <div class="re-music-once-name">
-                  <p>{{ item.name }}</p>
-                  <span>{{ item.song.album.artists[0].name }}</span>
-                </div>
-                <div class="re-music-once-album">
-                  <p>{{ "《" + item.song.album.name + "》" }}</p>
-                </div>
-                <div class="re-music-once-time">
-                  <p>
-                    {{
-                      Math.floor(
-                        (item.song.duration % ("1000" * "60" * "60")) /
-                          ("1000" * "60")
-                      ) +
-                      ":" +
-                      (Math.floor(
-                        (item.song.duration % ("1000" * "60")) / "1000"
-                      ) >= 10
-                        ? Math.floor(
-                            (item.song.duration % ("1000" * "60")) / "1000"
-                          )
-                        : "0" +
-                          Math.floor(
-                            (item.song.duration % ("1000" * "60")) / "1000"
-                          ))
-                    }}
-                  </p>
-                </div>
+      <div class="m">
+        <!-- 推荐歌单 -->
+        <div class="re-musiclist">
+          <h2 class="re-musiclist-h2">推荐歌单</h2>
+          <ul>
+            <li v-for="item in ReMusicLists" :key="item.id">
+              <div class="playlist">
+                <img :src="item.picUrl" alt="" @click="MusicList(item.id)" />
+                <h2>{{ item.name }}</h2>
               </div>
             </li>
-          </div>
-        </ul>
+          </ul>
+        </div>
+        <!-- 推荐单曲 -->
+        <div class="re-music">
+          <h2 class="re-music-h2">推荐单曲</h2>
+          <ul>
+            <div class="musics" ref="musics">
+              <li
+                v-for="(item, index) in ReMusics"
+                :key="index"
+                :data-musicid="item.id"
+                :data-index="index"
+                ref="remusic"
+              >
+                <div class="re-music-once">
+                  <div class="re-music-once-number">
+                    {{ index + 1 >= 10 ? index + 1 : "0" + (index + 1) }}
+                  </div>
+                  <div
+                    class="re-music-once-picurl"
+                    @click="getMusic(item.id, index)"
+                  >
+                    <img :src="item.picUrl" alt="" />
+                  </div>
+                  <div class="re-music-once-name">
+                    <p>{{ item.name }}</p>
+                    <span>{{ item.song.album.artists[0].name }}</span>
+                  </div>
+                  <div class="re-music-once-album">
+                    <p>{{ "《" + item.song.album.name + "》" }}</p>
+                  </div>
+                  <div class="re-music-once-time">
+                    <p>
+                      {{
+                        Math.floor(
+                          (item.song.duration % ("1000" * "60" * "60")) /
+                            ("1000" * "60")
+                        ) +
+                        ":" +
+                        (Math.floor(
+                          (item.song.duration % ("1000" * "60")) / "1000"
+                        ) >= 10
+                          ? Math.floor(
+                              (item.song.duration % ("1000" * "60")) / "1000"
+                            )
+                          : "0" +
+                            Math.floor(
+                              (item.song.duration % ("1000" * "60")) / "1000"
+                            ))
+                      }}
+                    </p>
+                  </div>
+                </div>
+              </li>
+            </div>
+          </ul>
+        </div>
+        <!-- <button @click="getWangyi">获取热门歌单</button> -->
       </div>
-      <!-- <button @click="getWangyi">获取热门歌单</button> -->
     </div>
   </div>
 </template>
@@ -112,7 +115,7 @@ export default {
         observer: true,
         observeParents: true,
         spaceBetween: 30,
-        slidesPerView: 1,
+        slidesPerView: 3,
         centeredSlides: true,
         /* 回到第一页 */
         loop: true,
@@ -124,18 +127,22 @@ export default {
           el: ".swiper-pagination",
           clickable: true,
         },
-        navigation: {
-          nextEl: ".swiper-button-next",
-          prevEl: ".swiper-button-prev",
-        },
         // Some Swiper option/callback...
       },
     };
   },
-    methods: {
+  methods: {
+    //点击歌单跳转
+    MusicList(e) {
+      this.$store.state.musicListId = e;
+      if (this.$route.path !== "/MusicList") {
+        this.$router.push({ path: "/MusicList" });
+      }
+    },
     /* 点击事件获得歌曲url */
     getMusic(Id, index) {
       //将播放暂停和true false绑定
+      this.$store.state.musicLyric = [];
       let ismusic = this.$store.state.isPlayMusic;
       if (Id != this.$store.state.reMusicId) {
         this.$store.state.mDuration = 0;
@@ -150,7 +157,7 @@ export default {
       //console.log(this.$store.state.isPlayMusic);
       this.$store.state.reMusicIndex = index;
       this.$store.state.reMusicId = Id;
-      this.$store.commit("getMusic");
+      console.log(this.$store.state.isPlayMusic);
     },
     /* axios接口获取数据 */
     //推荐单曲
@@ -244,17 +251,21 @@ export default {
 </script>
 
 <style scoped>
+.bg {
+  padding: 70px 0 30px 0;
+  background-color: rgb(250, 250, 250);
+}
 .m {
   width: 1200px;
   margin: 0 auto;
-  border-left: 1px solid #d3d3d3;
-  border-right: 1px solid #d3d3d3;
 }
 
-.carousel {
-  height: 390px;
+.swiper {
+  position: relative;
+  height: 100%;
   width: 1200px;
-  margin: 0 auto;
+  margin: 0px auto;
+  padding: 20px 0;
 }
 
 .swiper-slide {
@@ -274,15 +285,28 @@ export default {
   -ms-flex-align: center;
   -webkit-align-items: center;
   align-items: center;
+  transition: 300ms;
+  transform: scale(0.8);
 }
-
 .swiper .swiper-slide img {
-  height: 390px;
-  width: 1200px;
+  height: 100%;
+  width: 420px;
+  border-radius: 8px;
 }
-
+.swiper-slide-active,
+.swiper-slide-duplicate-active {
+  transform: scale(1);
+}
+.swiper-pagination {
+  position: absolute;
+  top: 178px;
+  color: #ff4e4e;
+}
 .re-musiclist {
   position: relative;
+  border-radius: 8px;
+  box-shadow: 0 5px 40px -1px rgba(2, 10, 18, 0.1);
+  margin: 30px 0;
 }
 
 .re-musiclist ul {
@@ -335,11 +359,12 @@ export default {
 .re-music {
   width: 1200px;
   position: relative;
+  border-radius: 8px;
+  box-shadow: 0 5px 40px -1px rgba(2, 10, 18, 0.1);
+  padding: 25px 0;
 }
 .re-music-h2 {
-  position: absolute;
-  top: 0px;
-  left: 35px;
+  margin-left: 36px;
   font-size: 16px;
 }
 .musics {
@@ -354,7 +379,7 @@ export default {
   color: #4a4a4a;
   width: 535px;
   height: 80px;
-  margin-top: 30px;
+  margin-top: 25px;
   font-size: 14px;
   border-radius: 5px;
   box-shadow: 0 5px 40px -1px rgba(2, 10, 18, 0.1);

@@ -1,58 +1,60 @@
 <template>
-  <div class="m">
-    <div class="song-list">
-      <div class="song-list-top">
-        <h2>{{ SongListName }}</h2>
-        <!-- 菜单隐藏页 -->
-        <div class="song-list-menu">
-          <button class="btn" @click="isMenu = !isMenu">选择分类</button>
-          <div class="song-menu" :class="{ menu: isMenu }">
-            <!-- 菜单大分类 -->
-            <div
-              class="song-big"
-              v-for="(item, index) in songMenus"
-              :key="index"
-            >
-              <h2>{{ item }}</h2>
-              <ul>
-                <li v-for="(i, y) in songListMenus" :key="y">
-                  <!-- 这里v-if使用=或===都不行 菜单小分类 -->
-                  <a
-                    href="javascript:;"
-                    @click="littleMenuSorf(i.name)"
-                    v-if="i.category == index"
-                    >{{ i.name }}</a
-                  >
-                </li>
-              </ul>
+  <div class="bg">
+    <div class="m">
+      <div class="song-list">
+        <div class="song-list-top">
+          <h2>{{ SongListName }}</h2>
+          <!-- 菜单隐藏页 -->
+          <div class="song-list-menu">
+            <button class="btn" @click="isMenu = !isMenu">选择分类</button>
+            <div class="song-menu" :class="{ menu: isMenu }">
+              <!-- 菜单大分类 -->
+              <div
+                class="song-big"
+                v-for="(item, index) in songMenus"
+                :key="index"
+              >
+                <h2>{{ item }}</h2>
+                <ul>
+                  <li v-for="(i, y) in songListMenus" :key="y">
+                    <!-- 这里v-if使用=或===都不行 菜单小分类 -->
+                    <a
+                      href="javascript:;"
+                      @click="littleMenuSorf(i.name)"
+                      v-if="i.category == index"
+                      >{{ i.name }}</a
+                    >
+                  </li>
+                </ul>
+              </div>
             </div>
           </div>
+          <div>
+            <button @click="SongListHot()">热门</button>
+            <button @click="SongListNew()">最新</button>
+          </div>
         </div>
-        <div>
-          <button @click="SongListHot()">热门</button>
-          <button @click="SongListNew()">最新</button>
+        <div class="song-list-main">
+          <ul>
+            <li v-for="item in SongLists" :key="item.id">
+              <div class="song-playlist">
+                <img :src="item.coverImgUrl" alt="" />
+                <h2>{{ item.name }}</h2>
+              </div>
+            </li>
+          </ul>
         </div>
-      </div>
-      <div class="song-list-main">
-        <ul>
-          <li v-for="item in SongLists" :key="item.id">
-            <div class="song-playlist">
-              <img :src="item.coverImgUrl" alt="" />
-              <h2>{{ item.name }}</h2>
-            </div>
-          </li>
-        </ul>
-      </div>
-      <div class="song-list-page">
-        <template>
-          <v-pagination
-            @page-change="pageChange"
-            :total="pages"
-            :pageSize="42"
-            :pageIndex="refresh"
-            :layout="['total', 'prev', 'pager', 'next']"
-          ></v-pagination>
-        </template>
+        <div class="song-list-page">
+          <template>
+            <v-pagination
+              @page-change="pageChange"
+              :total="pages"
+              :pageSize="42"
+              :pageIndex="refresh"
+              :layout="['total', 'prev', 'pager', 'next']"
+            ></v-pagination>
+          </template>
+        </div>
       </div>
     </div>
   </div>
@@ -71,9 +73,9 @@ export default {
   data() {
     return {
       SongListName: "全部",
-      SongLists: "",  //显示的42个歌单
+      SongLists: "", //显示的42个歌单
       pages: 0,
-      SongListUrl: "",  //存储的歌单url
+      SongListUrl: "", //存储的歌单url
       isMenu: true, //分类按钮的style
       songMenus: "", //分类
       songListMenus: "", //具体分类数据
@@ -97,12 +99,12 @@ export default {
           //console.log(res.data);
           this.SongLists = res.data.playlists;
           this.pages = res.data.total;
-          this.SongListUrl = "/top/playlist?limit=42&cat="+name;
+          this.SongListUrl = "/top/playlist?limit=42&cat=" + name;
         })
         .catch((err) => {
           console.log(err);
         });
-        this.isMenu = true;
+      this.isMenu = true;
     },
     /* 选择分类 */
     songMenu() {
@@ -187,30 +189,28 @@ export default {
 </script>
 
 <style scoped>
+.bg {
+  padding: 90px 0 30px 0;
+  background-color: rgb(250, 250, 250);
+}
 .m {
   width: 1200px;
   margin: 0 auto;
-  border-left: 1px solid #d3d3d3;
-  border-right: 1px solid #d3d3d3;
+}
+.song-list {
+  background-color: #fff;
+  border-radius: 8px;
+  box-shadow: 0 5px 40px -1px rgba(2, 10, 18, 0.1);
+  padding-bottom: 20px;
 }
 .song-list-top {
   display: flex;
-  height: 80px;
   line-height: 80px;
 }
 .song-list-top h2 {
   font-size: 20px;
   margin: 0 20px;
   margin-left: 50px;
-}
-
-* {
-  list-style: none;
-  outline: 0;
-  padding: 0;
-  margin: 0;
-  font-family: "Poppins", sans-serif;
-  box-sizing: border-box;
 }
 .song-list-menu {
   position: relative;
@@ -281,7 +281,7 @@ button {
   transform: translateY(20px);
   transition: all 0.5s;
   z-index: -10;
-  opacity: 0
+  opacity: 0;
 }
 
 .song-big h2 {

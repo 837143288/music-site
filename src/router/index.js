@@ -11,6 +11,8 @@ const SearchSong = () => import('../components/SearchSong')
 const Song = () => import('../components/SearchSong/Song')
 const Singer = () => import('../components/SearchSong/Singer')
 
+const MusicList = () => import('../components/MusicList')
+
 Vue.use(Router)
 
 export default new Router({
@@ -25,11 +27,15 @@ export default new Router({
     },
     {
       path: '/Top',
-      component: Top
+      component: Top,
     },
     {
       path: '/SongList',
       component: SongList
+    },
+    {
+      path: '/MusicList',
+      component: MusicList
     },
     {
       path: '/MyMusic',
