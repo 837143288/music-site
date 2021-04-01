@@ -67,7 +67,7 @@
                 <div class="music-list-song">
                   <a>{{ item.name }}</a>
                 </div>
-                <p class="playqwe" @click="playMusic(item.id, index)"></p>
+                <p class="playqwe" @click="playMusic(item.id, index)"></p>
                 <div class="music-list-singer">
                   <a>{{ item.ar[0].name }}</a>
                 </div>
@@ -116,7 +116,9 @@ export default {
     /* 点击歌曲播放 */
     playMusic(Id, index) {
       //将播放暂停和true false绑定
+      this.$store.state.musicLyric = [];
       let ismusic = this.$store.state.isPlayMusic;
+      this.$store.state.isMusicPlayer = true;
       if (Id != this.$store.state.reMusicId) {
         this.$store.state.mDuration = 0;
         this.$store.state.isPlayMusic = true;
@@ -127,7 +129,6 @@ export default {
           this.$store.state.isPlayMusic = true;
         }
       }
-      //console.log(this.$store.state.isPlayMusic);
       this.$store.state.reMusicIndex = index;
       this.$store.state.reMusicId = Id;
     },
@@ -344,17 +345,15 @@ export default {
   width: 50px;
 }
 .playqwe {
+  font-family: "icomoon";
+  font-size: 30px;
   position: absolute;
   left: 330px;
-  top: 8px;
-  width: 35px;
-  height: 35px;
   visibility: hidden;
-  transition: all 0.1s;
+  cursor: pointer;
 }
 .music-list-li:hover .playqwe {
   transition: all 0.1s;
-  background-color: blue;
   visibility: visible;
 }
 </style>

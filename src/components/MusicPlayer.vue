@@ -1,5 +1,6 @@
 <template>
-  <div class="music-player">
+<transition name="lyric">
+  <div class="music-player" v-show="this.$store.state.isMusicPlayer">
     <!-- 封面 -->
     <div class="avater">
       <img :src="$store.state.reMusicImg" alt="" />
@@ -89,6 +90,7 @@
     </div>
     <audio :src="$store.state.reMusicUrl" autoplay ref="audioRef"></audio>
   </div>
+</transition>
 </template>
 
 <script>
@@ -140,7 +142,6 @@ export default {
         this.btnPlay = "";
         this.timer = setTimeout(() => {
           this.$store.state.mDuration = this.$store.state.mDuration + 1000;
-          //console.log(this.$store.state.mDuration);
         }, 1000);
       }
     },
@@ -161,7 +162,7 @@ export default {
       this.$store.state.musicLyric = [];
       let index = this.$store.state.reMusicIndex;
       let reMusics = this.$store.state.reMusics;
-      console.log(reMusics);
+      //console.log(reMusics);
       if (index === reMusics) {
         this.$store.state.reMusicIndex = reMusics;
       } else {
@@ -243,12 +244,12 @@ export default {
       /* 歌词滚动 */
       for (let i = 0; i < this.$store.state.musicLyric.length - 1; i++) {
         if (Math.floor(val / 1000) === this.$store.state.musicLyric[i].time) {
-          console.log(i);
+          //console.log(i);
           this.$refs.lyric.scrollTo({
             top:
               (i - 4) *
               ((this.$refs.lyric.scrollHeight - 400) /
-                this.$store.state.musicLyric.length),
+                this.$store.state.musicLyric.length), 
             behavior: "smooth", //平滑滚动
           });
         }
@@ -280,14 +281,12 @@ export default {
 .avater {
   width: 60px;
   height: 60px;
-  background-color: rosybrown;
   margin-top: 6px;
 }
 .avater img {
   width: 60px;
   height: 60px;
   border-radius: 5px;
-  background-color: rosybrown;
 }
 .info {
   width: 120px;
@@ -364,7 +363,7 @@ export default {
 }
 .volume-wrap {
   display: flex;
-  margin: 22px 0 0 50px;
+  margin: 22px 0 0 0;
 }
 .volume-icon {
   font-family: "icomoon";
@@ -453,7 +452,7 @@ input[type="range"]::-ms-fill-upper {
 .lyric-btn {
   font-size: 20px;
   position: relative;
-  left: 100px;
+  left: 50px;
   top: 24px;
   cursor: pointer;
 }
@@ -465,7 +464,7 @@ input[type="range"]::-ms-fill-upper {
   background-color: #fff;
   position: absolute;
   top: -520px;
-  left: -100px;
+  left: -200px;
   z-index: 99;
   transition: all 0.2s;
   padding: 30px;

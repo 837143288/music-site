@@ -29,16 +29,20 @@
               </div>
             </div>
           </div>
-          <div>
-            <button @click="SongListHot()">热门</button>
-            <button @click="SongListNew()">最新</button>
+          <div class="hotNew">
+            <button :class="{ menuActive: this.isHotNew }" @click="SongListHot()">热门</button>
+            <button :class="{ menuActive: !this.isHotNew }" @click="SongListNew()">最新</button>
           </div>
         </div>
         <div class="song-list-main">
           <ul>
             <li v-for="item in SongLists" :key="item.id">
               <div class="song-playlist">
-                <img :src="item.coverImgUrl" alt="" />
+                <img
+                  :src="item.coverImgUrl"
+                  alt=""
+                  @click="MusicList(item.id)"
+                />
                 <h2>{{ item.name }}</h2>
               </div>
             </li>
@@ -72,14 +76,15 @@ export default {
   },
   data() {
     return {
-      SongListName: "全部",
+      SongListName: "全部", //歌单名字
       SongLists: "", //显示的42个歌单
       pages: 0,
       SongListUrl: "", //存储的歌单url
-      isMenu: true, //分类按钮的style
+      isMenu: true, //类型大菜单界面显示
       songMenus: "", //分类
       songListMenus: "", //具体分类数据
       refresh: 0,
+      isHotNew: true,
     };
   },
   created() {
@@ -87,6 +92,13 @@ export default {
     this.songMenu();
   },
   methods: {
+    //点击歌单跳转
+    MusicList(e) {
+      this.$store.state.musicListId = e;
+      if (this.$route.path !== "/MusicList") {
+        this.$router.push({ path: "/MusicList" });
+      }
+    },
     /* 菜单点击事件 */
     littleMenuSorf(name) {
       this.refresh = 1;
@@ -100,6 +112,7 @@ export default {
           this.SongLists = res.data.playlists;
           this.pages = res.data.total;
           this.SongListUrl = "/top/playlist?limit=42&cat=" + name;
+          this.SongListName = name;
         })
         .catch((err) => {
           console.log(err);
@@ -138,6 +151,7 @@ export default {
     /* 最热 */
     SongListHot() {
       this.refresh = 1;
+      this.isHotNew = true
       axios({
         url: this.SongListUrl + "&order=hot",
         method: "post",
@@ -154,12 +168,12 @@ export default {
     /* 最新 */
     SongListNew() {
       this.refresh = 1;
+      this.isHotNew = false
       axios({
         url: this.SongListUrl + "&order=new",
         method: "post",
       })
         .then((res) => {
-          //console.log(res.data);
           this.SongLists = res.data.playlists;
           this.pages = res.data.total;
         })
@@ -189,6 +203,9 @@ export default {
 </script>
 
 <style scoped>
+.zxc {
+  color: aqua;
+}
 .bg {
   padding: 90px 0 30px 0;
   background-color: rgb(250, 250, 250);
@@ -224,40 +241,44 @@ button {
   background: transparent;
   position: relative;
   transition: all 0.25s ease;
+  outline: none;
 }
 .btn {
-  overflow: hidden;
-  color: #fff;
-  border-radius: 30px;
-  box-shadow: 0 0px 0 0 rgba(143, 64, 248, 0.5),
-    0px 0 0 0 rgba(39, 200, 255, 0.5);
+  width: 100px; /*设置按钮宽度*/
+  color: white; /*字体颜色*/
+  background-color: cornflowerblue; /*按钮背景颜色*/
+  border-radius: 3px; /*让按钮变得圆滑一点*/
+  border-width: 0; /*消去按钮丑的边框*/
+  outline: none; /*取消轮廓*/
+  font-weight: lighter; /*设置字体粗细*/
+  text-align: center; /*字体居中*/
+  cursor: pointer; /*设置鼠标箭头手势*/
+  margin-right: 30px;
 }
+/* 悬停样式 */
 .btn:hover {
-  transform: translate(0, -2px);
-  box-shadow: 5px -5px 12px 0 rgba(143, 64, 248, 0.25),
-    -5px 5px 12px 0 rgba(39, 200, 255, 0.25);
+  transition: 0.8s linear; /*过渡动画*/
+  background-color: #4b71e0;
 }
-.btn::after {
-  content: "";
-  width: 400px;
-  height: 400px;
-  position: absolute;
-  top: -50px;
-  left: -100px;
-  background-color: #ff3cac;
-  background-image: linear-gradient(
-    225deg,
-    #27d86c 0,
-    #26caf8 50%,
-    #c625d0 100%
-  );
-  z-index: -1;
-  transition: all 0.5s ease;
+.hotNew button {
+  margin: 0 10px;
+  background-color: #f7f7f7;
+  padding: 7px 18px;
+  border-radius: 16px;
+  transition: all 0.4s;
 }
-.btn:hover::after {
-  transform: rotate(150deg);
+.hotNew button:hover {
+  color: #fff;
+  background-color: cornflowerblue;
 }
-
+.hotNew button:active {
+  background-color: #4b71e0;
+}
+/* 点击保留的样式 */
+.hotNew .menuActive {
+  color: #fff;
+  background-color: cornflowerblue;
+}
 .song-menu {
   position: absolute;
   top: 75px;
@@ -337,6 +358,7 @@ button {
   border: 1px solid rgba(0, 0, 0, 0.05);
   /* 鼠标移开恢复特效 */
   transition: all 0.4s ease 0s;
+  cursor: pointer;
 }
 .song-playlist img:hover {
   transform: translateY(-4px);

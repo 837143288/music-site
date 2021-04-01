@@ -51,14 +51,16 @@
                     class="re-music-once-picurl"
                     @click="getMusic(item.id, index)"
                   >
+                    <!-- 遮挡 -->
+                    <div class="keepOut"></div>
                     <img :src="item.picUrl" alt="" />
                   </div>
                   <div class="re-music-once-name">
-                    <p>{{ item.name }}</p>
-                    <span>{{ item.song.album.artists[0].name }}</span>
+                    <p :title="item.name">{{ item.name }}</p>
+                    <p :title="item.song.album.artists[0].name">{{ item.song.album.artists[0].name }}</p>
                   </div>
                   <div class="re-music-once-album">
-                    <p>{{ "《" + item.song.album.name + "》" }}</p>
+                    <p :title="item.song.album.name">{{ "《" + item.song.album.name + "》" }}</p>
                   </div>
                   <div class="re-music-once-time">
                     <p>
@@ -144,6 +146,7 @@ export default {
       //将播放暂停和true false绑定
       this.$store.state.musicLyric = [];
       let ismusic = this.$store.state.isPlayMusic;
+      this.$store.state.isMusicPlayer = true;
       if (Id != this.$store.state.reMusicId) {
         this.$store.state.mDuration = 0;
         this.$store.state.isPlayMusic = true;
@@ -154,10 +157,8 @@ export default {
           this.$store.state.isPlayMusic = true;
         }
       }
-      //console.log(this.$store.state.isPlayMusic);
       this.$store.state.reMusicIndex = index;
       this.$store.state.reMusicId = Id;
-      console.log(this.$store.state.isPlayMusic);
     },
     /* axios接口获取数据 */
     //推荐单曲
@@ -251,6 +252,18 @@ export default {
 </script>
 
 <style scoped>
+@font-face {
+  font-family: "icomoon";
+  src: url("../fonts/icomoon.eot?evtv7");
+  src: url("../fonts/icomoon.eot?evtv7#iefix") format("embedded-opentype"),
+    url("../fonts/icomoon.ttf?evtv7") format("truetype"),
+    url("../fonts/icomoon.woff?evtv7") format("woff"),
+    url("../fonts/icomoon.svg?evtv7#icomoon") format("svg");
+  font-weight: normal;
+  font-style: normal;
+  font-display: block;
+}
+
 .bg {
   padding: 70px 0 30px 0;
   background-color: rgb(250, 250, 250);
@@ -331,7 +344,6 @@ export default {
   margin-top: 40px;
   font-size: 13.5px;
 }
-
 .playlist img {
   margin-bottom: 10px;
   width: 132.5px;
@@ -340,6 +352,7 @@ export default {
   border: 1px solid rgba(0, 0, 0, 0.05);
   /* 鼠标移开恢复特效 */
   transition: all 0.4s ease 0s;
+  cursor: pointer;
 }
 
 .playlist img:hover {
@@ -399,7 +412,24 @@ export default {
   font-weight: 700;
   font-size: 15px;
 }
+/* 遮挡 */
+.re-music-once-picurl .keepOut {
+  font-family: "icomoon";
+  font-size: 50px;
+  position: absolute;
+  margin-top: 12.5px;
+  width: 55px;
+  height: 55px;
+  cursor: pointer;
+  z-index: 9;
+  background-color: rgba(0, 0, 0, 0.2);
+  visibility: hidden;
 
+}
+.re-music-once:hover .keepOut {
+  visibility: visible;
+  transition: all 0.1s;
+}
 .re-music-once-picurl img {
   margin-top: 12.5px;
   width: 55px;
@@ -423,12 +453,14 @@ export default {
 }
 
 .re-music-once-album {
-  width: 180px;
-  position: absolute;
-  top: 50%;
-  transform: translateY(-50%);
-  left: 280px;
+  width: 160px;
+  margin-left: 40px;
+  line-height: 80px;
   font-weight: 700;
+  display: -webkit-box;
+ -webkit-box-orient: vertical;
+ -webkit-line-clamp: 1;
+ overflow: hidden;
 }
 
 .re-music-once-time {

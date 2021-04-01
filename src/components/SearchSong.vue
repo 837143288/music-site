@@ -7,7 +7,7 @@
       <div class="search-select">
         <h2>搜索结果</h2>
         <router-link to="/SearchSong/Song"><p>单曲</p></router-link>
-        <router-link to="/SearchSong/Singer"><p>歌手</p></router-link>
+
       </div>
       <router-view></router-view>
     </div>

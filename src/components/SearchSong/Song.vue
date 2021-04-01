@@ -68,6 +68,7 @@ export default {
     playMusic(Id, index) {
       //将播放暂停和true false绑定
       let ismusic = this.$store.state.isPlayMusic;
+      this.$store.state.isMusicPlayer = true;
       if (Id != this.$store.state.reMusicId) {
         this.$store.state.mDuration = 0;
         this.$store.state.isPlayMusic = true;

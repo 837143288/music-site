@@ -139,7 +139,7 @@ export default {
           for (i = 0; i < res.data.comments.length; i++) {
             //获取评论的更新时间
             let d = new Date(res.data.comments[i].time);
-            console.log(res.data.comments[i].time);
+            //console.log(res.data.comments[i].time);
             let day = d.getDate();
             let month = d.getMonth() + 1;
             let year=d.getFullYear()
@@ -191,7 +191,9 @@ export default {
     /* 点击歌曲播放 */
     playMusic(Id, index) {
       //将播放暂停和true false绑定
+      this.$store.state.musicLyric = [];
       let ismusic = this.$store.state.isPlayMusic;
+      this.$store.state.isMusicPlayer = true;
       if (Id != this.$store.state.reMusicId) {
         this.$store.state.mDuration = 0;
         this.$store.state.isPlayMusic = true;
@@ -202,11 +204,8 @@ export default {
           this.$store.state.isPlayMusic = true;
         }
       }
-      //console.log(this.$store.state.isPlayMusic);
       this.$store.state.reMusicIndex = index;
       this.$store.state.reMusicId = Id;
-      this.$store.commit("getMusic");
-      console.log(this.$store.state.reMusicIndex);
     },
     /* 获取歌单内容信息 */
     MusicList() {
@@ -396,6 +395,7 @@ export default {
   position: absolute;
   left: 330px;
   visibility: hidden;
+  cursor: pointer;
 }
 .music-list-li:hover .playqwe {
   transition: all 0.1s;

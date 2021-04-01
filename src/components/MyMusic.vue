@@ -170,6 +170,7 @@
 import axios from "@/plugins/axios.js";
 export default {
   name: "MyMusic",
+  inject:['reload'],
   components: {
 
   },
@@ -189,12 +190,20 @@ export default {
     };
   },
   created() {},
-  mounted() {},
+  mounted() {
+    if (JSON.parse(sessionStorage.getItem("myId")) != null) {
+      this.$store.state.songListId = JSON.parse(sessionStorage.getItem("myId"));
+      this.$store.state.music = false;
+      this.user();
+    }
+  },
   methods: {
     /* 点击歌曲播放 */
     playMusic(Id, index) {
       //将播放暂停和true false绑定
+      this.$store.state.musicLyric = [];
       let ismusic = this.$store.state.isPlayMusic;
+      this.$store.state.isMusicPlayer = true;
       if (Id != this.$store.state.reMusicId) {
         this.$store.state.mDuration = 0;
         this.$store.state.isPlayMusic = true;
@@ -205,11 +214,8 @@ export default {
           this.$store.state.isPlayMusic = true;
         }
       }
-      //console.log(this.$store.state.isPlayMusic);
       this.$store.state.reMusicIndex = index;
       this.$store.state.reMusicId = Id;
-      this.$store.commit("getMusic");
-      console.log(this.$store.state.reMusicIndex);
     },
     /* 打开登录界面 */
     openLogin() {
@@ -243,9 +249,11 @@ export default {
           //console.log(res);
           if (res.data.code === 200) {
             this.$store.state.songListId = res.data.account.id;
+            sessionStorage.setItem("myId", JSON.stringify(res.data.account.id));
             this.closeLogin();
             this.user();
             this.$store.state.music = false;
+            location.reload();
           } else if (res.data.code === 502) {
             this.isLoginErr = true;
             this.loginErr = "密码错误！";

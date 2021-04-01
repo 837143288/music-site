@@ -20,6 +20,7 @@ const store = new Vuex.Store({
         reMusicSonger: '',
         reMusicDuration: '',
         musicLyric: [],  //歌词
+        isMusciPlayer: false,  //组件显示
         /* SearchSong */
         searchName: '',  //搜索歌曲数据
         searchSongs: "",
