@@ -216,6 +216,7 @@ export default {
       }
       this.$store.state.reMusicIndex = index;
       this.$store.state.reMusicId = Id;
+      
     },
     /* 打开登录界面 */
     openLogin() {
@@ -307,7 +308,6 @@ export default {
             method: "post",
           })
             .then((res) => {
-              console.log(res);
               this.$store.state.mySongDetails = res.data.songs;
             })
             .catch((err) => {

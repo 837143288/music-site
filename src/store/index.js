@@ -24,8 +24,6 @@ const store = new Vuex.Store({
         /* SearchSong */
         searchName: '',  //搜索歌曲数据
         searchSongs: "",
-        /* MusicList */
-        musicListId: "",  //歌单id
         /* MyMusic */
         music: true,  //界面
         songList: "",  //用户歌单

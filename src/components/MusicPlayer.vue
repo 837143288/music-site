@@ -1,96 +1,103 @@
 <template>
-<transition name="lyric">
-  <div class="music-player" v-show="this.$store.state.isMusicPlayer">
-    <!-- 封面 -->
-    <div class="avater">
-      <img :src="$store.state.reMusicImg" alt="" />
-    </div>
-    <!-- 歌曲歌手 -->
-    <div class="info">
-      <h2>{{ $store.state.reMusicName }}</h2>
-      <p>{{ $store.state.reMusicSonger }}</p>
-    </div>
-    <!-- 播放按钮 -->
-    <div class="player-btn">
-      <i class="btn-prev" @click="prevMusic"></i>
-      <i class="btn-play" @click="playMusic">{{ btnPlay }}</i>
-      <i class="btn-next" @click="nextMusic"></i>
-    </div>
-    <!-- 进度条 -->
-    <div class="progress-wrap">
-      <p>{{ transTime($store.state.mDuration) }}</p>
-      <div class="progress-wrap-bar">
-        <!-- 进度条总宽 -->
-        <div class="progress-bar" ref="musicWidth">
-          <!-- 进度条 -->
-          <input
-            type="range"
-            class="musicBar"
-            ref="musicBar"
-            v-model="musicBar"
-            min="0"
-            max="600"
-            @change="changeBar()"
-            @input="inputBar()"
-            :style="{
-              background:
-                '-webkit-linear-gradient(#ff4e4e, #ff4e4e) 0% 0% / ' +
-                (musicBar * 100) / 600 +
-                '% 100% no-repeat',
-            }"
-          />
-          <!-- 部分1： -webkit-linear-gradient(top, rgb(5, 156, 250), rgb(5, 156, 250)) 
+  <transition name="lyric">
+    <div class="music-player" v-show="this.$store.state.isMusicPlayer">
+      <!-- 封面 -->
+      <div class="avater">
+        <img :src="$store.state.reMusicImg" alt="" />
+      </div>
+      <!-- 歌曲歌手 -->
+      <div class="info">
+        <h2>{{ $store.state.reMusicName }}</h2>
+        <p>{{ $store.state.reMusicSonger }}</p>
+      </div>
+      <!-- 播放按钮 -->
+      <div class="player-btn">
+        <i class="btn-prev" @click="prevMusic"></i>
+        <i class="btn-play" @click="playMusic">{{ btnPlay }}</i>
+        <i class="btn-next" @click="nextMusic"></i>
+      </div>
+      <!-- 进度条 -->
+      <div class="progress-wrap">
+        <p>{{ transTime($store.state.mDuration) }}</p>
+        <div class="progress-wrap-bar">
+          <!-- 进度条总宽 -->
+          <div class="progress-bar" ref="musicWidth">
+            <!-- 进度条 -->
+            <input
+              type="range"
+              class="musicBar"
+              ref="musicBar"
+              v-model="musicBar"
+              min="0"
+              max="600"
+              @change="changeBar()"
+              @input="inputBar()"
+              :style="{
+                background:
+                  '-webkit-linear-gradient(#ff4e4e, #ff4e4e) 0% 0% / ' +
+                  (musicBar * 100) / 600 +
+                  '% 100% no-repeat',
+              }"
+            />
+            <!-- 部分1： -webkit-linear-gradient(top, rgb(5, 156, 250), rgb(5, 156, 250)) 
                表示：渐变参数，从上到下开始渐变，从rgb(5, 156, 250)到rgb(5, 156, 250)变颜色，
                部分2：0% 0% 从左上角的(0%,0%)开始填充颜色
                部分3： 27% 100% 到整个而input的（27%，100%）填充颜色结束。 -->
-        </div>
-      </div>
-      <p>{{ transTime($store.state.reMusicDuration) }}</p>
-    </div>
-    <!-- 音量 -->
-    <div class="volume-wrap">
-      <div class="volume-icon"></div>
-      <div class="volume-slide" ref="volumeSlide">
-        <!-- range 进度条类型 v-model可以与滑动的value值绑定 -->
-        <!-- 音量调节 -->
-        <input
-          type="range"
-          class="volumeBar"
-          v-model="volume"
-          min="0"
-          max="100"
-          :style="{
-            background:
-              '-webkit-linear-gradient(#ff4e4e, #ff4e4e) 0% 0% / ' +
-              (volume * 100) / 100 +
-              '% 100% no-repeat',
-          }"
-        />
-      </div>
-    </div>
-    <!-- 歌词 -->
-    <div class="lyric">
-      <!-- 按钮 -->
-      <div class="lyric-btn" @click="lyric()">词</div>
-      <!-- 词板 -->
-      <!-- transition v-show动画效果 -->
-      <transition name="lyric">
-        <div class="lyric-plate" v-show="isLyric" :key="1">
-          <h4>歌词</h4>
-          <div class="lyric-body" ref="lyric">
-            <p
-              v-for="(item, index) in this.$store.state.musicLyric"
-              :key="index"
-            >
-              {{ item.text }}
-            </p>
           </div>
         </div>
-      </transition>
+        <p>{{ transTime($store.state.reMusicDuration) }}</p>
+      </div>
+      <!-- 音量 -->
+      <div class="volume-wrap">
+        <div class="volume-icon"></div>
+        <div class="volume-slide" ref="volumeSlide">
+          <!-- range 进度条类型 v-model可以与滑动的value值绑定 -->
+          <!-- 音量调节 -->
+          <input
+            type="range"
+            class="volumeBar"
+            v-model="volume"
+            min="0"
+            max="100"
+            :style="{
+              background:
+                '-webkit-linear-gradient(#ff4e4e, #ff4e4e) 0% 0% / ' +
+                (volume * 100) / 100 +
+                '% 100% no-repeat',
+            }"
+          />
+        </div>
+      </div>
+      <!-- 歌词 -->
+      <div class="lyric">
+        <!-- 按钮 -->
+        <div class="lyric-btn" @click="lyric()">词</div>
+        <!-- 词板 -->
+        <!-- transition v-show动画效果 -->
+        <transition name="lyric">
+          <div class="lyric-plate" v-show="isLyric" :key="1">
+            <h4>歌词</h4>
+            <div class="lyric-body" ref="lyric">
+              <p
+                v-for="(item, index) in this.$store.state.musicLyric"
+                :key="index"
+              >
+                {{ item.text }}
+              </p>
+            </div>
+          </div>
+        </transition>
+      </div>
+      <audio
+        :src="$store.state.reMusicUrl"
+        autoplay
+        ref="audioRef"
+        @ended="end"
+        @waiting="wait"
+        @playing="playing"
+      ></audio>
     </div>
-    <audio :src="$store.state.reMusicUrl" autoplay ref="audioRef"></audio>
-  </div>
-</transition>
+  </transition>
 </template>
 
 <script>
@@ -107,11 +114,27 @@ export default {
   },
   mounted() {},
   methods: {
+    //播放
+    playing() {
+      console.log("播放");
+      clearInterval(this.timer);
+      this.timer = setInterval(() => {
+          this.$store.state.mDuration = this.$store.state.mDuration + 1000;
+        }, 1000);
+    },
+    //等待加载
+    wait() {
+      console.log("缓存中...");
+      clearInterval(this.timer);
+    },
+    //播放完毕
+    end() {
+      this.nextMusic();
+    },
     /* 获取歌词 */
     //点击显示歌词
     lyric() {
       this.isLyric = !this.isLyric;
-      console.log(this.isLyric);
     },
     //滑动进度条
     inputBar() {
@@ -135,18 +158,19 @@ export default {
         this.$store.state.isPlayMusic = false;
         this.btnPlay = "";
         clearInterval(this.timer);
-        this.timer = null;
+
       } else {
         reAudio.play();
         this.$store.state.isPlayMusic = true;
         this.btnPlay = "";
-        this.timer = setTimeout(() => {
-          this.$store.state.mDuration = this.$store.state.mDuration + 1000;
-        }, 1000);
+        // this.timer = setTimeout(() => {
+        //   this.$store.state.mDuration = this.$store.state.mDuration + 1000;
+        // }, 1000);
       }
     },
     //上一首
     prevMusic() {
+      clearInterval(this.timer);
       this.$store.state.musicLyric = []; //歌词
       let index = this.$store.state.reMusicIndex;
       if (index === 0) {
@@ -159,6 +183,7 @@ export default {
     },
     //下一首
     nextMusic() {
+      clearInterval(this.timer);
       this.$store.state.musicLyric = [];
       let index = this.$store.state.reMusicIndex;
       let reMusics = this.$store.state.reMusics;
@@ -217,10 +242,10 @@ export default {
       if (val) {
         reAudio.play();
         this.btnPlay = "";
-        this.timer = setInterval(() => {
-          this.$store.state.mDuration = this.$store.state.mDuration + 1000;
-          //console.log(this.$store.state.mDuration);
-        }, 1000);
+        // this.timer = setInterval(() => {
+        //   this.$store.state.mDuration = this.$store.state.mDuration + 1000;
+        //   //console.log(this.$store.state.mDuration);
+        // }, 1000);
       } else {
         reAudio.pause();
         this.btnPlay = "";
@@ -230,28 +255,31 @@ export default {
     /* 自动播放 监听音乐播放时间 监听进度条运动 */
     watchTime(val) {
       /* 进度条 */
-      if (
-        this.transTime(val) >= this.transTime(this.$store.state.reMusicDuration)
-      ) {
-        this.$store.state.mDuration = this.$store.state.reMusicDuration;
-        /* 延时1秒执行 */
-        this.autoPlay = setTimeout(() => {
-          this.nextMusic();
-        }, 1000);
-      }
+      // if (
+      //   this.transTime(val) == this.transTime(this.$store.state.reMusicDuration)
+      // ) {
+      //   // this.$store.state.mDuration = this.$store.state.reMusicDuration;
+      //   /* 延时1秒执行 */
+      //   this.autoPlay = setTimeout(() => {
+      //     this.nextMusic();
+      //   }, 1000);
+      // }
       this.musicBar = 600 * (val / this.$store.state.reMusicDuration);
-      console.log();
       /* 歌词滚动 */
+      console.log(this.$store.state.musicLyric);
       for (let i = 0; i < this.$store.state.musicLyric.length - 1; i++) {
-        if (Math.floor(val / 1000) === this.$store.state.musicLyric[i].time) {
-          //console.log(i);
+        if (Math.floor(val / 1000) == this.$store.state.musicLyric[i].time && this.$store.state.musicLyric[i].text != '') {
+          Array.from(this.$refs.lyric.children).forEach(item => {
+            item.style.cssText = ''
+          })
           this.$refs.lyric.scrollTo({
             top:
-              (i - 4) *
-              ((this.$refs.lyric.scrollHeight - 400) /
-                this.$store.state.musicLyric.length), 
+              (i - 5) *
+              ((this.$refs.lyric.scrollHeight) /
+                this.$store.state.musicLyric.length),
             behavior: "smooth", //平滑滚动
           });
+          this.$refs.lyric.children[i].style.cssText = 'color: #ff4e4e;transform: scale(1.1);'
         }
       }
     },
@@ -486,8 +514,9 @@ input[type="range"]::-ms-fill-upper {
   font-size: 14px;
   text-align: center;
   font-weight: 300;
-  line-height: 24px;
-  margin: 5px 0;
+  line-height: 32px;
+  padding: 0 10px;
+  font-family: "Arial","Microsoft YaHei","黑体","宋体",sans-serif;
 }
 /* v-show动画效果 */
 .lyric-enter,

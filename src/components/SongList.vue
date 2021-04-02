@@ -94,7 +94,7 @@ export default {
   methods: {
     //点击歌单跳转
     MusicList(e) {
-      this.$store.state.musicListId = e;
+      sessionStorage.setItem("musicListId", JSON.stringify(e));
       if (this.$route.path !== "/MusicList") {
         this.$router.push({ path: "/MusicList" });
       }

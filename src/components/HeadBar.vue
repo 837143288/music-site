@@ -36,10 +36,10 @@
         :disabled="this.loginState"
       >
         <ul class="portraitUl">
-          <li>我的歌单</li>
+          <li @click="login">我的歌单</li>
           <li @click="edit">退出</li>
         </ul>
-        <el-button slot="reference" circle class="avatarBtn">
+        <el-button slot="reference" circle class="avatarBtn" @click="login">
           <el-avatar
             icon="el-icon-user-solid"
             :src="this.portraitUrl"
@@ -66,6 +66,12 @@ export default {
     this.portrait();
   },
   methods: {
+    login() {
+      let url = window.location.pathname
+      if(url != "/MyMusic") {
+        this.$router.push({path: '/MyMusic'})
+      }
+    },
     edit() {
       axios({
         url: "/logout",
@@ -127,6 +133,7 @@ export default {
   display: flex;
   width: 1200px;
   margin: 0 auto;
+  position: relative;
 }
 .head div {
   line-height: 74px;
@@ -177,7 +184,7 @@ export default {
   width: 32px;
   height: 32px;
   position: absolute;
-  right: 170px;
+  right: 0;
   top: 17px;
   border-radius: 50%;
   padding: 0;

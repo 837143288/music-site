@@ -122,24 +122,30 @@ export default {
       similar: "",
       comments: "",
       commentsTime: "",
+      pageId: '',  //页面跳转ID
     };
+  },
+  created() {
+    this.pageId = JSON.parse(sessionStorage.getItem("musicListId"))
+  },
+  mounted() {
+    this.MusicList();
+    this.MusicSimi();
+    this.Comment();
   },
   methods: {
     /* 获取歌单评论 */
     Comment() {
-      let id = this.$store.state.musicListId;
       axios({
-        url: "/comment/playlist?id=" + id,
+        url: "/comment/playlist?id=" + this.pageId,
         method: "post",
       })
         .then((res) => {
-          console.log(res);
           this.comments = res.data.comments;
           let i = 0;
           for (i = 0; i < res.data.comments.length; i++) {
             //获取评论的更新时间
             let d = new Date(res.data.comments[i].time);
-            //console.log(res.data.comments[i].time);
             let day = d.getDate();
             let month = d.getMonth() + 1;
             let year=d.getFullYear()
@@ -175,13 +181,11 @@ export default {
     },
     /* 获取相似歌单 */
     MusicSimi() {
-      let id = this.$store.state.musicListId;
       axios({
-        url: "/related/playlist?id=" + id,
+        url: "/related/playlist?id=" + this.pageId,
         method: "post",
       })
         .then((res) => {
-          //console.log(res);
           this.similar = res.data.playlists;
         })
         .catch((err) => {
@@ -209,13 +213,11 @@ export default {
     },
     /* 获取歌单内容信息 */
     MusicList() {
-      let id = this.$store.state.musicListId;
       axios({
-        url: "/playlist/detail?id=" + id,
+        url: "/playlist/detail?id=" + this.pageId,
         method: "post",
       })
         .then((res) => {
-          //console.log(res.data.playlist);
           this.musicMessage = res.data.playlist;
           //将毫秒转换成日期,获取月日
           let d = new Date(res.data.playlist.updateTime);
@@ -228,13 +230,11 @@ export default {
           for (i = 1; i <= res.data.playlist.trackIds.length - 1; i++) {
             this.musicListId += "," + res.data.playlist.trackIds[i].id;
           }
-          //console.log(this.musicListId);
           axios({
             url: "/song/detail?ids=" + [this.musicListId],
             method: "post",
           })
             .then((res) => {
-              //console.log(res);
               this.musicList = res.data.songs;
             })
             .catch((err) => {
@@ -245,11 +245,6 @@ export default {
           console.log(err);
         });
     },
-  },
-  created() {
-    this.MusicList();
-    this.MusicSimi();
-    this.Comment();
   },
   computed: {
     lsUpDown() {
@@ -265,13 +260,11 @@ export default {
       let id = index.dataset.musicid;
       this.$store.state.reMusicId = id;
       this.$store.commit("getMusic");
-      //console.log(index);
     },
   },
   updated: function () {
     //下一首的点击上限
     this.$store.state.reMusics = this.$refs.musicListTop.children.length - 2;
-    //console.log(this.$store.state.reMusics);
   },
 };
 </script>
