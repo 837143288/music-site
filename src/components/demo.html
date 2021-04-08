@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+
+    </style>
+</head>
+
+<body>
+    <div>
+        <form id="upload" enctype="multipart/form-data" method="post">
+            <input type="file" name="file" id="pic" />
+            <input type="button" value="提交" onclick="uploadPic()" />
+            <span class="showUrl"></span>
+            <img src="" class="showPic" alt="">
+        </form>
+    </div>
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+    <script src="https://cdn.bootcss.com/jquery/1.12.4/jquery.min.js"></script>
+    <script>
+        
+        function uploadPic() {
+            var form = document.getElementById('upload'),
+                formData = new FormData(form);
+            $.ajax({
+                url: "https://sscpre.boe.com/v1/medical-console/medical/file/upload",
+                type: "post",
+                data: formData,
+                processData: false,
+                contentType: false,
+                success: function (res) {
+                    if (res) {
+                        alert("上传成功！");
+                    }
+                    console.log(res);
+                    $("#pic").val("");
+                    $(".showUrl").html(res);
+                    $(".showPic").attr("src", res);
+                },
+                error: function (err) {
+                    alert("网络连接失败,稍后重试", err);
+                }
+
+            })
+
+        }
+    </script>
+</body>
+
+</html>

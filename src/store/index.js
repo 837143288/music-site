@@ -1,6 +1,7 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
 import axios from "@/plugins/axios.js";
+import VueRouter from 'vue-router';
 
 //安装插件
 Vue.use(Vuex)
@@ -8,6 +9,7 @@ Vue.use(Vuex)
 //创建对象
 const store = new Vuex.Store({
     state: {
+        isRouter: false,
         /* MusicPlayer */
         isPlayMusic: false,  //歌曲播放,是否播放
         mDuration: 0,  //音乐当前播放时长
@@ -41,7 +43,6 @@ const store = new Vuex.Store({
                 method: "post",
             })
                 .then((res) => {
-                    //console.log(res.data.result.songs);
                     state.searchSongs = res.data.result.songs;
                 })
                 .catch((err) => {
@@ -56,7 +57,6 @@ const store = new Vuex.Store({
                 method: "post",
             }).then((res) => {
                 state.reMusicUrl = res.data.data[0].url;
-                //console.log(res);
             }).catch((err) => {
                 console.log(err);
             });
@@ -65,7 +65,6 @@ const store = new Vuex.Store({
                 url: "/song/detail?ids=" + state.reMusicId,
                 method: "post",
             }).then((res) => {
-                //console.log(res.data.songs[0].dt);
                 state.reMusicImg = res.data.songs[0].al.picUrl;
                 state.reMusicName = res.data.songs[0].name;
                 state.reMusicSonger = res.data.songs[0].ar[0].name;
@@ -78,7 +77,7 @@ const store = new Vuex.Store({
                 url: "/lyric?id=" + state.reMusicId,
                 method: "post",
             }).then((res) => {
-                //console.log(res);
+                state.musicLyric = []
                 let lyric = res.data.lrc.lyric
                 let arr = lyric.split("\n")
                 let row = arr.length
@@ -95,7 +94,6 @@ const store = new Vuex.Store({
                         state.musicLyric.push(obj);
                     });
                 }
-                //console.log(state.musicLyric);
             }).catch((err) => {
                 console.log(err);
             })
@@ -111,6 +109,16 @@ const store = new Vuex.Store({
 
     }
 })
+
+// const router = new VueRouter({
+//     routes,
+//     mode: "history",
+//     linkActiveClass: "active",
+// })
+
+// router.beforeEach((to ,from ,next) => {
+//     next()
+// })
 
 //导出
 export default store

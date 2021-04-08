@@ -171,7 +171,6 @@ export default {
     //上一首
     prevMusic() {
       clearInterval(this.timer);
-      this.$store.state.musicLyric = []; //歌词
       let index = this.$store.state.reMusicIndex;
       if (index === 0) {
         this.$store.state.reMusicIndex = 0;
@@ -184,10 +183,8 @@ export default {
     //下一首
     nextMusic() {
       clearInterval(this.timer);
-      this.$store.state.musicLyric = [];
       let index = this.$store.state.reMusicIndex;
       let reMusics = this.$store.state.reMusics;
-      //console.log(reMusics);
       if (index === reMusics) {
         this.$store.state.reMusicIndex = reMusics;
       } else {
@@ -242,10 +239,6 @@ export default {
       if (val) {
         reAudio.play();
         this.btnPlay = "";
-        // this.timer = setInterval(() => {
-        //   this.$store.state.mDuration = this.$store.state.mDuration + 1000;
-        //   //console.log(this.$store.state.mDuration);
-        // }, 1000);
       } else {
         reAudio.pause();
         this.btnPlay = "";
@@ -254,19 +247,8 @@ export default {
     },
     /* 自动播放 监听音乐播放时间 监听进度条运动 */
     watchTime(val) {
-      /* 进度条 */
-      // if (
-      //   this.transTime(val) == this.transTime(this.$store.state.reMusicDuration)
-      // ) {
-      //   // this.$store.state.mDuration = this.$store.state.reMusicDuration;
-      //   /* 延时1秒执行 */
-      //   this.autoPlay = setTimeout(() => {
-      //     this.nextMusic();
-      //   }, 1000);
-      // }
       this.musicBar = 600 * (val / this.$store.state.reMusicDuration);
       /* 歌词滚动 */
-      console.log(this.$store.state.musicLyric);
       for (let i = 0; i < this.$store.state.musicLyric.length - 1; i++) {
         if (Math.floor(val / 1000) == this.$store.state.musicLyric[i].time && this.$store.state.musicLyric[i].text != '') {
           Array.from(this.$refs.lyric.children).forEach(item => {
@@ -284,10 +266,8 @@ export default {
       }
     },
   },
-
   beforeDestory() {
     clearInterval(this.timer);
-    clearInterval(this.autoPlay);
   },
 };
 </script>

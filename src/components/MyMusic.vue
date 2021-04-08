@@ -201,12 +201,17 @@ export default {
     /* 点击歌曲播放 */
     playMusic(Id, index) {
       //将播放暂停和true false绑定
-      this.$store.state.musicLyric = [];
       let ismusic = this.$store.state.isPlayMusic;
       this.$store.state.isMusicPlayer = true;
       if (Id != this.$store.state.reMusicId) {
         this.$store.state.mDuration = 0;
         this.$store.state.isPlayMusic = true;
+        this.$store.state.reMusicIndex = index
+        if(this.$store.state.isRouter) {
+          this.$store.state.reMusicId = Id;
+          this.$store.commit("getMusic");
+          this.$store.state.isRouter = false
+        }
       } else {
         if (ismusic) {
           this.$store.state.isPlayMusic = false;
@@ -214,9 +219,6 @@ export default {
           this.$store.state.isPlayMusic = true;
         }
       }
-      this.$store.state.reMusicIndex = index;
-      this.$store.state.reMusicId = Id;
-      
     },
     /* 打开登录界面 */
     openLogin() {
@@ -247,14 +249,13 @@ export default {
         method: "post",
       })
         .then((res) => {
-          //console.log(res);
           if (res.data.code === 200) {
             this.$store.state.songListId = res.data.account.id;
             sessionStorage.setItem("myId", JSON.stringify(res.data.account.id));
             this.closeLogin();
             this.user();
             this.$store.state.music = false;
-            location.reload();
+            this.reload();
           } else if (res.data.code === 502) {
             this.isLoginErr = true;
             this.loginErr = "密码错误！";
@@ -274,7 +275,6 @@ export default {
         method: "post",
       })
         .then((res) => {
-          //console.log(res);
           this.$store.state.songList = res.data.playlist;
           this.$store.state.lengths = res.data.playlist.length;
           for (let i = 0; i < res.data.playlist.length; i++) {
@@ -295,14 +295,12 @@ export default {
         method: "post",
       })
         .then((res) => {
-          //console.log(res);
           this.$store.state.myMusicList = res.data;
           //获取歌单的所有歌曲
           let Id = res.data.privileges[0].id;
           for (let i = 1; i <= res.data.privileges.length - 1; i++) {
             Id += "," + res.data.privileges[i].id;
           }
-          //console.log(musicListId);
           axios({
             url: "/song/detail?ids=" + [Id],
             method: "post",
@@ -335,14 +333,12 @@ export default {
       })
         .then((res) => {
           this.qrKey = res.data.data.unikey;
-          console.log(this.qrKey);
           axios({
             url: "/login/qr/create/qrimg?key=" + this.qrKey,
             method: "post",
           })
             .then((res) => {
               this.qrImg = res;
-              //console.log(this.qrImg);
             })
             .catch((err) => {
               console.log(err);
@@ -367,14 +363,12 @@ export default {
       let id = index.dataset.musicid;
       this.$store.state.reMusicId = id;
       this.$store.commit("getMusic");
-      //console.log(index);
     },
   },
   updated: function () {
     //下一首的点击上限 当有值时执行 不然会报错
     if (this.$refs.musicListTop) {
       this.$store.state.reMusics = this.$refs.musicListTop.children.length - 2;
-      //console.log(this.$store.state.reMusics);
     }
   },
 };
@@ -431,8 +425,6 @@ export default {
 .btn button:hover {
   background-color: #555;
   color: #fff;
-}
-.btn button:active {
 }
 .screen {
   width: 400px;

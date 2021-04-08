@@ -78,7 +78,8 @@ export default {
         method: "post",
       }).then((res) => {
         sessionStorage.removeItem("myId");
-        location.reload();
+        this.$store.state.music = true
+        this.reload();
       });
     },
     portrait() {

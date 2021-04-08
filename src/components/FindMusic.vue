@@ -57,10 +57,14 @@
                   </div>
                   <div class="re-music-once-name">
                     <p :title="item.name">{{ item.name }}</p>
-                    <p :title="item.song.album.artists[0].name">{{ item.song.album.artists[0].name }}</p>
+                    <p :title="item.song.album.artists[0].name">
+                      {{ item.song.album.artists[0].name }}
+                    </p>
                   </div>
                   <div class="re-music-once-album">
-                    <p :title="item.song.album.name">{{ "《" + item.song.album.name + "》" }}</p>
+                    <p :title="item.song.album.name">
+                      {{ "《" + item.song.album.name + "》" }}
+                    </p>
                   </div>
                   <div class="re-music-once-time">
                     <p>
@@ -133,6 +137,7 @@ export default {
       },
     };
   },
+  mounted() {},
   methods: {
     //点击歌单跳转
     MusicList(e) {
@@ -144,12 +149,17 @@ export default {
     /* 点击事件获得歌曲url */
     getMusic(Id, index) {
       //将播放暂停和true false绑定
-      this.$store.state.musicLyric = [];
       let ismusic = this.$store.state.isPlayMusic;
       this.$store.state.isMusicPlayer = true;
       if (Id != this.$store.state.reMusicId) {
         this.$store.state.mDuration = 0;
         this.$store.state.isPlayMusic = true;
+        this.$store.state.reMusicIndex = index;
+        if(this.$store.state.isRouter) {
+          this.$store.state.reMusicId = Id;
+          this.$store.commit("getMusic");
+          this.$store.state.isRouter = false
+        }
       } else {
         if (ismusic) {
           this.$store.state.isPlayMusic = false;
@@ -157,8 +167,7 @@ export default {
           this.$store.state.isPlayMusic = true;
         }
       }
-      this.$store.state.reMusicIndex = index;
-      this.$store.state.reMusicId = Id;
+      
     },
     /* axios接口获取数据 */
     //推荐单曲
@@ -169,7 +178,6 @@ export default {
         method: "post",
       })
         .then((res) => {
-          //console.log(res.data.result);
           that.ReMusics = res.data.result;
           let minutes = Math.floor(
             (res.data.result[0].song.duration % (1000 * 60 * 60)) / (1000 * 60)
@@ -182,7 +190,6 @@ export default {
           } else {
             that.second = seconds;
           }
-          //console.log(that.second);
         })
         .catch((err) => {
           console.log(err);
@@ -196,7 +203,6 @@ export default {
         method: "post",
       })
         .then((res) => {
-          //console.log(res.data.result);
           that.ReMusicLists = res.data.result;
         })
         .catch((err) => {
@@ -210,7 +216,6 @@ export default {
         method: "post",
       })
         .then((res) => {
-          //console.log(res.data.banners);
           that.swiperBanners = res.data.banners;
         })
         .catch((err) => {
@@ -233,7 +238,6 @@ export default {
       let id = index.dataset.musicid;
       this.$store.state.reMusicId = id;
       this.$store.commit("getMusic");
-      //console.log(index);
     },
   },
   /* 直接调用 */
@@ -246,7 +250,6 @@ export default {
   updated: function () {
     //下一首的点击上限
     this.$store.state.reMusics = this.$refs.musics.children.length - 1;
-    //console.log(this.$store.state.reMusics);
   },
 };
 </script>
@@ -424,7 +427,6 @@ export default {
   z-index: 9;
   background-color: rgba(0, 0, 0, 0.2);
   visibility: hidden;
-
 }
 .re-music-once:hover .keepOut {
   visibility: visible;
@@ -458,9 +460,9 @@ export default {
   line-height: 80px;
   font-weight: 700;
   display: -webkit-box;
- -webkit-box-orient: vertical;
- -webkit-line-clamp: 1;
- overflow: hidden;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 1;
+  overflow: hidden;
 }
 
 .re-music-once-time {

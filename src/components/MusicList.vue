@@ -195,12 +195,17 @@ export default {
     /* 点击歌曲播放 */
     playMusic(Id, index) {
       //将播放暂停和true false绑定
-      this.$store.state.musicLyric = [];
       let ismusic = this.$store.state.isPlayMusic;
       this.$store.state.isMusicPlayer = true;
       if (Id != this.$store.state.reMusicId) {
         this.$store.state.mDuration = 0;
         this.$store.state.isPlayMusic = true;
+        this.$store.state.reMusicIndex = index
+        if(this.$store.state.isRouter) {
+          this.$store.state.reMusicId = Id;
+          this.$store.commit("getMusic");
+          this.$store.state.isRouter = false
+        }
       } else {
         if (ismusic) {
           this.$store.state.isPlayMusic = false;
@@ -208,8 +213,6 @@ export default {
           this.$store.state.isPlayMusic = true;
         }
       }
-      this.$store.state.reMusicIndex = index;
-      this.$store.state.reMusicId = Id;
     },
     /* 获取歌单内容信息 */
     MusicList() {

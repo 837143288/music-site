@@ -33,6 +33,15 @@ export default {
     MusicPlayer,
     Foot,
   },
+  created() {
+    this.$router.beforeEach((to, from, next) => {
+      if(to.path != from.path) {
+        this.$store.state.isRouter = true
+        console.log(this.$store.state.isRouter);
+      }
+      next()
+    })
+  },
   methods: {
     reload() {
       this.isRouterAlive = false; //先关闭，

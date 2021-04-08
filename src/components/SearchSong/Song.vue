@@ -57,7 +57,6 @@ export default {
         method: "post",
       })
         .then((res) => {
-          console.log(res.data.result.songs);
           this.searchSongs = res.data.result.songs;
         })
         .catch((err) => {
@@ -72,6 +71,12 @@ export default {
       if (Id != this.$store.state.reMusicId) {
         this.$store.state.mDuration = 0;
         this.$store.state.isPlayMusic = true;
+        this.$store.state.reMusicIndex = index
+        if(this.$store.state.isRouter) {
+          this.$store.state.reMusicId = Id;
+          this.$store.commit("getMusic");
+          this.$store.state.isRouter = false
+        }
       } else {
         if (ismusic) {
           this.$store.state.isPlayMusic = false;
@@ -79,11 +84,6 @@ export default {
           this.$store.state.isPlayMusic = true;
         }
       }
-      //console.log(this.$store.state.isPlayMusic);
-      this.$store.state.reMusicIndex = index;
-      this.$store.state.reMusicId = Id;
-      this.$store.commit("getMusic");
-      console.log(this.$store.state.reMusicIndex);
     },
   },
   computed: {
@@ -100,13 +100,11 @@ export default {
       let id = index.dataset.musicid;
       this.$store.state.reMusicId = id;
       this.$store.commit("getMusic");
-      //console.log(index);
     },
   },
   updated: function () {
     //下一首的点击上限
     this.$store.state.reMusics = this.$refs.musicListTop.children.length - 2;
-    //console.log(this.$store.state.reMusics);
   },
 };
 </script>

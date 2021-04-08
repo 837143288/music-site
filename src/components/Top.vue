@@ -116,12 +116,17 @@ export default {
     /* 点击歌曲播放 */
     playMusic(Id, index) {
       //将播放暂停和true false绑定
-      this.$store.state.musicLyric = [];
       let ismusic = this.$store.state.isPlayMusic;
       this.$store.state.isMusicPlayer = true;
       if (Id != this.$store.state.reMusicId) {
         this.$store.state.mDuration = 0;
         this.$store.state.isPlayMusic = true;
+        this.$store.state.reMusicIndex = index
+        if(this.$store.state.isRouter) {
+          this.$store.state.reMusicId = Id;
+          this.$store.commit("getMusic");
+          this.$store.state.isRouter = false
+        }
       } else {
         if (ismusic) {
           this.$store.state.isPlayMusic = false;
@@ -129,8 +134,6 @@ export default {
           this.$store.state.isPlayMusic = true;
         }
       }
-      this.$store.state.reMusicIndex = index;
-      this.$store.state.reMusicId = Id;
     },
     /* 获取排行榜 */
     musicTop() {
@@ -139,7 +142,6 @@ export default {
         method: "post",
       })
         .then((res) => {
-          //console.log(res.data.list[0].id);
           this.Tops = res.data.list;
           this.TopId = res.data.list[0].id;
         })
@@ -154,7 +156,6 @@ export default {
         method: "post",
       })
         .then((res) => {
-          //console.log(res.data.playlist);
           this.topImg = res.data.playlist.coverImgUrl;
           this.topName = res.data.playlist.name;
           this.topExplain = res.data.playlist.description;
